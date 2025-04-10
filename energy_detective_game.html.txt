@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Energy Detective Game</title>
+<style>
+body { font-family: Arial, sans-serif; text-align: center; background-color: #f0f8ff; }
+h1 { color: #2e8b57; }
+.container { display: flex; justify-content: center; gap: 50px; margin-top: 20px; }
+.bin { border: 2px dashed #999; width: 200px; height: 300px; padding: 10px; background-color: #fff; }
+.bin h3 { margin-top: 0; }
+.cards { margin-top: 30px; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+.card { padding: 10px 15px; background-color: #e0f7fa; border: 1px solid #00796b; border-radius: 8px; cursor: grab; }
+.timer { font-size: 20px; margin: 20px 0; }
+.button { padding: 10px 20px; font-size: 16px; margin-top: 20px; cursor: pointer; background-color: #4CAF50; color: white; border: none; border-radius: 5px; }
+</style>
+</head>
+<body>
+<h1>🔍 Energy Detective Game</h1>
+<p>Drag the cards into the correct bin before time runs out!</p>
+<div class="timer" id="timer">Time: 60s</div>
+
+<div class="container">
+<div class="bin" id="saving" ondrop="drop(event)" ondragover="allowDrop(event)">
+<h3>✅ Saving Energy</h3>
+</div>
+<div class="bin" id="wasting" ondrop="drop(event)" ondragover="allowDrop(event)">
+<h3>❌ Wasting Energy</h3>
+</div>
+</div>
+
+<div class="cards" id="cardArea">
+<div class="card" draggable="true" ondragstart="drag(event)" id="card1" data-answer="saving">Turning off lights when leaving a room</div>
+<div class="card" draggable="true" ondragstart="drag(event)" id="card2" data-answer="wasting">Leaving the fridge door open</div>
+<div class="card" draggable="true" ondragstart="drag(event)" id="card3" data-answer="saving">Using energy-efficient LED bulbs</div>
+<div class="card" draggable="true" ondragstart="drag(event)" id="card4" data-answer="wasting">Running dishwasher half full</div>
+<div class="card" draggable="true" ondragstart="drag(event)" id="card5" data-answer="saving">Washing clothes with cold water</div>
+<div class="card" draggable="true" ondragstart="drag(event)" id="card6" data-answer="wasting">Leaving electronics plugged in overnight</div>
+</div>
+
+<button class="button" onclick="startTimer()">Start Game</button>
+
+<script>
+let timeLeft = 60;
+let timerInterval;
+
+function allowDrop(ev) {
+ev.preventDefault();
+}
+
+function drag(ev) {
+ev.dataTransfer.setData("text", ev.target.id);
+}
+
+function drop(ev) {
+ev.preventDefault();
+const cardId = ev.dataTransfer.getData("text");
+const card = document.getElementById(cardId);
+if (card.getAttribute('data-answer') === ev.target.id) {
+ev.target.appendChild(card);
+} else {
+alert('Oops! Try again.');
+}
+}
+
+function startTimer() {
+timeLeft = 60;
+document.getElementById("timer").textContent = "Time: " + timeLeft + "s";
+clearInterval(timerInterval);
+timerInterval = setInterval(() => {
+timeLeft--;
+document.getElementById("timer").textContent = "Time: " + timeLeft + "s";
+if (timeLeft <= 0) {
+clearInterval(timerInterval);
+alert("Time's up!");
+}
+}, 1000);
+}
+</script>
+</body>
+</html>
